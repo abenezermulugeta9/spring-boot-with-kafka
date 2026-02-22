@@ -1,0 +1,9 @@
+{
+  "libraryEventId": null,
+  "libraryEventType": "NEW",
+  "book": {
+    "bookId": 123,
+    "bookName": "A Song of Fire and Ice",
+    "bookAuthor": "George R. R. Martin"
+  }
+}

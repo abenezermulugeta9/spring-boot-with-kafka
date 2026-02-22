@@ -1,0 +1,160 @@
+================================================================================
+LIBRARY EVENTS PRODUCER - CURL COMMANDS
+Testing the LibraryEventsController with 5 Books by George R. R. Martin
+================================================================================
+
+PREREQUISITES:
+- The application must be running on http://localhost:8080
+- Start the application using: ./gradlew bootRun (or gradlew.bat bootRun on Windows)
+- Wait for the application to fully initialize before running the curl commands
+
+ENDPOINT:
+- POST http://localhost:8080/v1/libraryEvent
+- Content-Type: application/json
+
+================================================================================
+CURL COMMAND 1: A Game of Thrones
+================================================================================
+curl -X POST http://localhost:8080/v1/libraryEvent \
+  -H "Content-Type: application/json" \
+  -d '{
+    "libraryEventId": null,
+    "libraryEventType": "NEW",
+    "book": {
+      "bookId": 1,
+      "bookName": "A Game of Thrones",
+      "bookAuthor": "George R. R. Martin"
+    }
+  }'
+
+Expected Response: 201 Created
+Response Body: The same LibraryEvent object with libraryEventId populated (if implemented)
+
+
+================================================================================
+CURL COMMAND 2: A Clash of Kings
+================================================================================
+curl -X POST http://localhost:8080/v1/libraryEvent \
+  -H "Content-Type: application/json" \
+  -d '{
+    "libraryEventId": null,
+    "libraryEventType": "NEW",
+    "book": {
+      "bookId": 2,
+      "bookName": "A Clash of Kings",
+      "bookAuthor": "George R. R. Martin"
+    }
+  }'
+
+Expected Response: 201 Created
+Response Body: The same LibraryEvent object with libraryEventId populated (if implemented)
+
+
+================================================================================
+CURL COMMAND 3: A Storm of Swords
+================================================================================
+curl -X POST http://localhost:8080/v1/libraryEvent \
+  -H "Content-Type: application/json" \
+  -d '{
+    "libraryEventId": null,
+    "libraryEventType": "NEW",
+    "book": {
+      "bookId": 3,
+      "bookName": "A Storm of Swords",
+      "bookAuthor": "George R. R. Martin"
+    }
+  }'
+
+Expected Response: 201 Created
+Response Body: The same LibraryEvent object with libraryEventId populated (if implemented)
+
+
+================================================================================
+CURL COMMAND 4: A Feast for Crows
+================================================================================
+curl -X POST http://localhost:8080/v1/libraryEvent \
+  -H "Content-Type: application/json" \
+  -d '{
+    "libraryEventId": null,
+    "libraryEventType": "NEW",
+    "book": {
+      "bookId": 4,
+      "bookName": "A Feast for Crows",
+      "bookAuthor": "George R. R. Martin"
+    }
+  }'
+
+Expected Response: 201 Created
+Response Body: The same LibraryEvent object with libraryEventId populated (if implemented)
+
+
+================================================================================
+CURL COMMAND 5: A Dance with Dragons
+================================================================================
+curl -X POST http://localhost:8080/v1/libraryEvent \
+  -H "Content-Type: application/json" \
+  -d '{
+    "libraryEventId": null,
+    "libraryEventType": "NEW",
+    "book": {
+      "bookId": 5,
+      "bookName": "A Dance with Dragons",
+      "bookAuthor": "George R. R. Martin"
+    }
+  }'
+
+Expected Response: 201 Created
+Response Body: The same LibraryEvent object with libraryEventId populated (if implemented)
+
+
+================================================================================
+RUNNING ALL COMMANDS AT ONCE (Batch Execution)
+================================================================================
+
+Execute all 5 commands sequentially with a 1-second delay between each:
+
+curl -X POST http://localhost:8080/v1/libraryEvent -H "Content-Type: application/json" -d '{"libraryEventId": null, "libraryEventType": "NEW", "book": {"bookId": 1, "bookName": "A Game of Thrones", "bookAuthor": "George R. R. Martin"}}' && \
+sleep 1 && \
+curl -X POST http://localhost:8080/v1/libraryEvent -H "Content-Type: application/json" -d '{"libraryEventId": null, "libraryEventType": "NEW", "book": {"bookId": 2, "bookName": "A Clash of Kings", "bookAuthor": "George R. R. Martin"}}' && \
+sleep 1 && \
+curl -X POST http://localhost:8080/v1/libraryEvent -H "Content-Type: application/json" -d '{"libraryEventId": null, "libraryEventType": "NEW", "book": {"bookId": 3, "bookName": "A Storm of Swords", "bookAuthor": "George R. R. Martin"}}' && \
+sleep 1 && \
+curl -X POST http://localhost:8080/v1/libraryEvent -H "Content-Type: application/json" -d '{"libraryEventId": null, "libraryEventType": "NEW", "book": {"bookId": 4, "bookName": "A Feast for Crows", "bookAuthor": "George R. R. Martin"}}' && \
+sleep 1 && \
+curl -X POST http://localhost:8080/v1/libraryEvent -H "Content-Type: application/json" -d '{"libraryEventId": null, "libraryEventType": "NEW", "book": {"bookId": 5, "bookName": "A Dance with Dragons", "bookAuthor": "George R. R. Martin"}}'
+
+
+================================================================================
+NOTES
+================================================================================
+
+1. Individual Commands vs Batch:
+   - Each CURL COMMAND (1-5) can be run independently at any time
+   - The Batch Execution section can run all 5 commands in sequence
+
+2. Windows Users:
+   - On Windows PowerShell, use backticks (`) instead of backslashes (\) for line continuation
+   - Example: curl -X POST ... `
+              -H "Content-Type: application/json" `
+              -d '...'
+   
+   - Or use cmd.exe (Command Prompt) which supports backslash continuation
+
+3. Response Handling:
+   - All commands should return HTTP 201 (Created) status
+   - The controller logs the received libraryEvent
+   - Check application logs for verification: "libraryEvent : ..."
+
+4. Testing Tips:
+   - Use 'curl -v' for verbose output (includes headers and response details)
+   - Example: curl -v -X POST http://localhost:8080/v1/libraryEvent ...
+   
+   - Pretty-print JSON responses (if jq is installed):
+   - Example: curl -X POST ... | jq .
+
+5. Verifying the API is Running:
+   - Test with a simple health check: curl http://localhost:8080/actuator/health
+   - Or try accessing the root: curl http://localhost:8080/
+   - Check the console logs from the application startup
+
+================================================================================

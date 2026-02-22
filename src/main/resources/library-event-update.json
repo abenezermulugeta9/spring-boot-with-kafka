@@ -1,0 +1,9 @@
+{
+  "libraryEventId": 123,
+  "libraryEventType": "UPDATE",
+  "book": {
+    "bookId": 123,
+    "bookName": "A Song of Fire and Ice",
+    "bookAuthor": "George R. R. Martin"
+  }
+}
