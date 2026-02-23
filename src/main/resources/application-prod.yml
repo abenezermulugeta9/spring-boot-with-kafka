@@ -8,6 +8,6 @@ spring:
 spring:
   kafka:
     producer:
-      bootstrap-server: prod:9092, prod:9093, prod:9094
+      bootstrap-servers: prod:9092, prod:9093, prod:9094
       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
