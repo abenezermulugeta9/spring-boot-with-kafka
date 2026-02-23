@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learnkafka.library_events_producer.domain.LibraryEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -27,6 +28,30 @@ public class LibraryEventsProducer {
         this.objectMapper = objectMapper;
     }
 
+    public CompletableFuture<SendResult<Integer, String>> sendLibraryEventAsyncUsingProducerRecord(LibraryEvent libraryEvent)
+            throws JsonProcessingException {
+        // Use var or kafka will throw exception when using wrapper classes as types
+        var key = libraryEvent.libraryEventId();
+        var value = objectMapper.writeValueAsString(libraryEvent);
+
+        // Creates ProducerRecord object to send to kafka
+        var producerRecord = buildProducerRecord(key, value, topicName);
+
+        // Async send (happens only once): briefly fetches topic metadata (blocking), then sends the message
+        // asynchronously.
+        // Returns CompletableFuture completed via whenComplete() callback for error/success handling.
+        var completableFuture = this.kafkaTemplate.send(producerRecord);
+
+        return completableFuture.whenComplete((sendResult, exception) -> {
+            // If exception happened when sending the kafka message log the exception message
+            if(exception != null) {
+                handleException(exception);
+            } else {
+                handleSendingMessage(key, value, sendResult);
+            }
+        });
+    }
+
     public CompletableFuture<SendResult<Integer, String>> sendLibraryEventAsync(LibraryEvent libraryEvent)
             throws JsonProcessingException {
         // Use var or kafka will throw exception when using wrapper classes as types
@@ -48,7 +73,7 @@ public class LibraryEventsProducer {
         });
     }
 
-    public SendResult<Integer, String> sendLibraryEvent(LibraryEvent libraryEvent)
+    public SendResult<Integer, String> sendLibraryEventSync(LibraryEvent libraryEvent)
             throws JsonProcessingException, ExecutionException, InterruptedException {
         // Use var or kafka will throw exception when using wrapper classes as types
         var key = libraryEvent.libraryEventId();
@@ -62,6 +87,10 @@ public class LibraryEventsProducer {
         handleSendingMessage(key, value, sendResult);
 
         return sendResult;
+    }
+
+    private ProducerRecord<Integer, String> buildProducerRecord(Integer key, String value, String topicName) {
+        return new ProducerRecord<>(topicName, key, value);
     }
 
     private static void handleException(Throwable exception) {

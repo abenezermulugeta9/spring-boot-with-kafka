@@ -28,8 +28,10 @@ public class LibraryEventsController {
 
         log.info(">>> Start sending libraryEvent message to kafka - LibraryEvent:  {} ", libraryEvent);
 
-        // Invoke kafka producer service and send the message
-        libraryEventsProducer.sendLibraryEventAsync(libraryEvent);
+        // Invoke kafka producer service and send the message using the following methods
+        libraryEventsProducer.sendLibraryEventAsyncUsingProducerRecord(libraryEvent);
+//        libraryEventsProducer.sendLibraryEventAsync(libraryEvent);
+//        libraryEventsProducer.sendLibraryEventSync(libraryEvent);
 
         log.info(">>> End sending libraryEvent message to kafka");
 
