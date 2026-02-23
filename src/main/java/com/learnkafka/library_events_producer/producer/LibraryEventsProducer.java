@@ -27,15 +27,16 @@ public class LibraryEventsProducer {
     }
 
     public CompletableFuture<SendResult<Integer, String>> sendLibraryEvent(LibraryEvent libraryEvent) throws JsonProcessingException {
-        int key = libraryEvent.libraryEventId();
-        String value = objectMapper.writeValueAsString(libraryEvent);
+        // Use var or kafka will throw exception when using wrapper classes as types
+        var key = libraryEvent.libraryEventId();
+        var value = objectMapper.writeValueAsString(libraryEvent);
 
         var completableFuture = this.kafkaTemplate.send(topicName, key, value);
 
         return completableFuture.whenComplete((sendResult, exception) -> {
             // If exception happened when sending the kafka message log the exception message
             if(exception != null) {
-                log.error("Error sending kafka message {} ", exception.getMessage(), exception);
+                log.error("Error sending kafka message: {} ", exception.getMessage(), exception);
             } else {
                 log.info("Kafka message was sent successfully for key: {} with value: {}, to partition: {} ",
                         key, value, sendResult.getRecordMetadata().partition());
