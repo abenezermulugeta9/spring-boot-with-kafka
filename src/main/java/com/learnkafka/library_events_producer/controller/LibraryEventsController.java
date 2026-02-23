@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+
 @RestController
 @Slf4j
 public class LibraryEventsController {
@@ -21,12 +23,15 @@ public class LibraryEventsController {
     }
 
     @PostMapping("/v1/libraryEvent")
-    public ResponseEntity<LibraryEvent> sendLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+    public ResponseEntity<LibraryEvent> sendLibraryEvent(@RequestBody LibraryEvent libraryEvent)
+            throws JsonProcessingException, ExecutionException, InterruptedException {
 
         log.info(">>> Start sending libraryEvent message to kafka - LibraryEvent:  {} ", libraryEvent);
 
         // Invoke kafka producer service and send the message
-        libraryEventsProducer.sendLibraryEvent(libraryEvent);
+        libraryEventsProducer.sendLibraryEventAsync(libraryEvent);
+
+        log.info(">>> End sending libraryEvent message to kafka");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
